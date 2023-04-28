@@ -51,3 +51,17 @@ Blizzard_2013|CA-MP3-17-139.wav|Performed by Catherine Byers.
 1. Recognize speech
 2. Wreck a nice beach
 ...</code></pre>
+
+## Overall work done for Hacker role :
+1. Downloaded and pre-processed LJSpeech-1.1 dataset, resulting in transcript file ready to be trained on.
+2. Documented the network.py file which corresponds to the architecture of the model, including Style token layer and the tacotron modules
+3. Trained on the subset of the LJSpeech dataset, for 1000 steps 
+4. Experimented with hyperparams like number of tokens, etc to reduce loss
+5. Ran eval and inference using the trained model, gets bad results, due to very less training time
+
+## Further Changes Possible
+1. The paper proposes a second method of inference which is directly conditioning on combination of GSTs. This can be implemented, in infer.py, allowing to style based on combination of weights of GSTs.
+2. GSTs or weights can be used to automatically generate style annotations and this may substantially
+reduce the human-in-the-loop efforts.
+3. Subset selection of tokens can be done, using clustering techniques like K-means or by applying PCA. 
+

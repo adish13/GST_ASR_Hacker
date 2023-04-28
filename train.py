@@ -12,7 +12,40 @@ from graph import Graph
 #tf.set_random_seed(2401)
 #np.random.seed(2401)
 #random.seed(2401)
+ 
+"""
 
+The train() function is the main training loop. It initializes the random seed and
+ builds the TensorFlow graph in training mode. Then, it creates a saver object to save the 
+ trained model, a session object to execute the graph, and a coordinator object to coordinate 
+ between multiple threads (if any). 
+ If a pre-trained model exists, it restores the model parameters; otherwise, it initializes a new model.
+
+The main loop then runs until it reaches the desired number of training steps. 
+At each step, it runs a single training batch, computes the loss, and prints the 
+current global step and the loss. If the current step is a multiple of hp.summary_period 
+(a hyperparameter), it also computes the summary and alignment, and plots the alignment. 
+If the current step is a multiple of hp.save_period, it saves the current model.
+
+The alignment refers to the attention weights that are learned during the training of a 
+neural machine translation (NMT) system.
+
+In this specific code, the alignment is computed and visualized during training for 
+debugging and visualization purposes. 
+The attention weights are learned to align the input sequence (source language) with the 
+output sequence (target language) by assigning a weight to each source token at each target token generation step. 
+This is done in order to determine which parts of the input sequence should be used to generate the current target token.
+
+The alignment matrix computed in this code represents the attention weights for a specific 
+target sentence, and is used to plot a visualization of the alignment for the 
+first sentence in the batch during training.
+
+If any exception occurs during the training, it requests the coordinator to stop 
+all threads and join them. Finally, it closes the summary writer and the session.
+
+The script can be executed directly as a standalone program (__name__ == '__main__') 
+to start the training. Once the training is complete, it prints "Training Done".
+"""
 def train():
     # Build graph
     g = Graph(mode='train'); print("Training Graph loaded")

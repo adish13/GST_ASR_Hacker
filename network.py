@@ -1,6 +1,15 @@
 import tensorflow as tf
 from modules import *
 
+"""
+The encoder takes a sequence of input embeddings and produces a sequence of 
+high-level features that are used by the decoders to generate the output spectrograms. 
+The encoder consists of a prenet that reduces the dimensionality of the input embeddings, 
+followed by a Convolution Bank Highway Network (CBHG) that applies several layers of 
+convolutions and highway networks to the input embeddings to produce a higher-level 
+representation. This is similar to the CBHG encoder described in the Style Tokens paper, 
+which uses multiple convolutional layers to learn higher-level representations of the input embeddings.
+"""
 def build_encoder(inputs, is_training):
     # inputs = [batch, seq_len, emb_dim]
 
@@ -45,6 +54,14 @@ def build_encoder(inputs, is_training):
 
     return memory, state
 
+"""
+The first decoder takes the output from the encoder and generates an 
+intermediate representation that is used by the second decoder to produce the 
+final output spectrograms. The first decoder consists of an attention RNN that 
+takes the prenet output and the encoder output and produces an intermediate representation. 
+This is similar to the decoder described in the Style Tokens paper, which uses an 
+attention mechanism to selectively focus on different parts of the input embeddings.
+"""
 def build_decoder1(inputs, memory, encoder_final_state, is_training):
     # inputs = [batch, seq_len//r, hp.n_mels]
     # memory = [batch, seq_len, gru_size]
@@ -79,6 +96,16 @@ def build_decoder1(inputs, memory, encoder_final_state, is_training):
 
     return mel_hats, alignments
 
+"""
+The second decoder takes the intermediate representation produced by the 
+first decoder and generates the final output spectrograms. 
+The second decoder consists of a CBHG that applies several layers of convolutions 
+and highway networks to the intermediate representation to produce the output 
+spectrograms. 
+This is similar to the CBHG decoder described in the Style Tokens paper, 
+which uses multiple convolutional layers to transform the intermediate representation 
+into the final output spectrograms.
+"""
 def build_decoder2(inputs, is_training):
     # inputs = [batch_size, seq_len//r, hp.n_mels*hp.r]
     # outputs = [batch_size, seq_len, 1+hp.n_fft//2]
@@ -176,6 +203,19 @@ def build_ref_encoder(inputs, is_training):
 
 """
 Style Token layer
+The function build_STL is used to construct the style token layer (STL). It takes the encoded 
+input sequence inputs and produces the style embedding style_emb and the global style tokens GST.
+First, the global_style_tokens are defined as a trainable variable 
+of shape [hp.token_num, hp.token_emb_size // hp.num_heads]. 
+The hp.token_num represents the number of style tokens and hp.token_emb_size is the 
+dimension of each token.
+Then, a multi-head attention mechanism is applied between the input sequence 
+and the global style tokens. The multi_head_attention function computes attention 
+between the input and the tokens using the attention type specified in hp.style_att_type. 
+The resulting style embedding style_emb has a shape of [batch_size, hp.token_emb_size], 
+where batch_size is the number of examples being processed.
+Finally, the GST and style_emb are returned by the function. The GST variable is also
+ used as input for the decoder to generate the mel-spectrogram.
 """
 def build_STL(inputs):
     # inputs = [batch_size, hp.ref_enc_gru_size]

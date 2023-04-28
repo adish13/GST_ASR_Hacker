@@ -5,7 +5,7 @@ class Hyperparams:
     transcript_path = './data/toy_transcription.txt'
     feat_path = './feat_BZ_max300'
     sample_dir = './sample_dir'
-    infer_data_path = './harvard_sentences.txt'
+    infer_data_path = './hinference_sentences.txt'
 
     #### Char-set ####
     char_set = "PE abcdefghijklmnopqrstuvwxyz'.?" # P for padding, E for eos
@@ -42,16 +42,16 @@ class Hyperparams:
     attn_normalize = True
 
     #### Networks ####
-    lr = 0.001
+    lr = 0.01
     batch_size = 16
     summary_period = 300
-    save_period = 1000
+    save_period = 200
     r = 5 # Reduction factor. Paper => 2, 3, 5
     guided_attn = False
 
     #### Signal Processing ####
     is_trimming = True
-    sr = 16000 # Sample rate.
+    sr = 22050 # Sample rate.
     n_fft = 1024 # fft points (samples)
     frame_shift = 0.0125 # seconds
     frame_length = 0.05 # seconds

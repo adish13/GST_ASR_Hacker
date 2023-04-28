@@ -1,5 +1,5 @@
 data/
 feat_BZ_max300/
 LJSpeech-1.1/
-lmao.py
+preprocess.py
 sample_dir/*

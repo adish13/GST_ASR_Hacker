@@ -9,6 +9,41 @@ from hyperparams import Hyperparams as hp
 from utils import *
 from load_tfrecords import *
 
+"""
+Graph class: This is the main module that defines the graph. 
+It takes an argument mode which determines the mode of the graph, either "train", "eval", or "infer". 
+It initializes the input placeholders x, y, and z depending on the mode. 
+If the mode is "train", it also sets up a batch generator to feed the data in batches. 
+The batch generator returns x, y, z, fnames, and num_batch, which are used as the input placeholders.
+
+embed function: This function takes the input sequence x, the vocabulary size, 
+and the embedding size as inputs, and returns the embedded sequence.
+
+build_ref_encoder function: This function builds the reference encoder for the style token embeddings. 
+It takes the input mel-spectrogram y and a boolean is_training as inputs, and returns the 
+reference encoder output.
+
+build_STL function: This function builds the style token layer. 
+It takes the reference encoder output and returns the style token embedding and the GST vector.
+
+build_encoder function: This function builds the encoder module. 
+It takes the embedded sequence, is_training boolean, and returns the encoder output and final state.
+
+build_decoder1 function: This function builds the first decoder module. 
+It takes the decoder inputs, encoder output, and final state as inputs, and returns the 
+decoder output and attention weights.
+
+build_decoder2 function: This function builds the second decoder module. It takes the 
+decoder output and returns the predicted mel-spectrogram.
+
+Loss computation: The code computes the total loss by summing up the mel loss, mag loss, and 
+guided attention loss (if hp.guided_attn=True).
+
+Training scheme: The code defines an optimizer and a learning rate that decays over time. 
+The global_step variable is used to keep track of the number of training steps, 
+which is updated after each training step. The AdamOptimizer is used to minimize the loss.
+"""
+
 # Define Graph
 class Graph:
     def __init__(self, mode="train"):
